@@ -32,48 +32,48 @@ namespace BoletoNet
 
         public override void ValidaBoleto(Boleto boleto)
         {
-            //Formata o tamanho do n˙mero da agÍncia
+            //Formata o tamanho do n√∫mero da ag√™ncia
             if (boleto.Cedente.ContaBancaria.Agencia.Length < 4)
                 boleto.Cedente.ContaBancaria.Agencia = Utils.FormatCode(boleto.Cedente.ContaBancaria.Agencia, 4);
 
-            //Formata o tamanho do n˙mero da conta corrente
+            //Formata o tamanho do n√∫mero da conta corrente
             if (boleto.Cedente.ContaBancaria.Conta.Length < 5)
                 boleto.Cedente.ContaBancaria.Conta = Utils.FormatCode(boleto.Cedente.ContaBancaria.Conta, 5);
 
             //Atribui o nome do banco ao local de pagamento
-            if (boleto.LocalPagamento == "AtÈ o vencimento, preferencialmente no ")
+            if (boleto.LocalPagamento == "At√© o vencimento, preferencialmente no ")
                 boleto.LocalPagamento += Nome;
-            else boleto.LocalPagamento = "PAG¡VEL PREFERENCIALMENTE NAS COOPERATIVAS DE CR…DITO DO SICREDI";
+            else boleto.LocalPagamento = "PAG√ÅVEL PREFERENCIALMENTE NAS COOPERATIVAS DE CR√âDITO DO SICREDI";
 
-            //Verifica se data do processamento È valida
+            //Verifica se data do processamento √© valida
             if (boleto.DataProcessamento == DateTime.MinValue) // diegomodolo (diego.ribeiro@nectarnet.com.br)
                 boleto.DataProcessamento = DateTime.Now;
 
-            //Verifica se data do documento È valida
+            //Verifica se data do documento √© valida
             if (boleto.DataDocumento == DateTime.MinValue) // diegomodolo (diego.ribeiro@nectarnet.com.br)
                 boleto.DataDocumento = DateTime.Now;
 
-            string infoFormatoCodigoCedente = "formato AAAAPPCCCCC, onde: AAAA = N˙mero da agÍncia, PP = Posto do benefici·rio, CCCCC = CÛdigo do benefici·rio";
+            string infoFormatoCodigoCedente = "formato AAAAPPCCCCC, onde: AAAA = N√∫mero da ag√™ncia, PP = Posto do benefici√°rio, CCCCC = C√≥digo do benefici√°rio";
 
             var codigoCedente = Utils.FormatCode(boleto.Cedente.Codigo, 11);
 
             if (string.IsNullOrEmpty(codigoCedente))
-                throw new BoletoNetException("CÛdigo do cedente deve ser informado, " + infoFormatoCodigoCedente);
+                throw new BoletoNetException("C√≥digo do cedente deve ser informado, " + infoFormatoCodigoCedente);
 
             var conta = boleto.Cedente.ContaBancaria.Conta;
             if (boleto.Cedente.ContaBancaria != null &&
                 (!codigoCedente.StartsWith(boleto.Cedente.ContaBancaria.Agencia) ||
                  !(codigoCedente.EndsWith(conta) || codigoCedente.EndsWith(conta.Substring(0, conta.Length - 1)))))
-                //throw new BoletoNetException("CÛdigo do cedente deve estar no " + infoFormatoCodigoCedente);
-                boleto.Cedente.Codigo = string.Format("{0}{1}{2}", boleto.Cedente.ContaBancaria.Agencia, boleto.Cedente.ContaBancaria.OperacaConta, boleto.Cedente.Codigo);
+                //throw new BoletoNetException("C√≥digo do cedente deve estar no " + infoFormatoCodigoCedente);
+                boleto.Cedente.Codigo = string.Format("{0}{1}{2}", boleto.Cedente.ContaBancaria.Agencia, boleto.Cedente.ContaBancaria.OperacaConta, boleto.Cedente.ContaBancaria.Agencia);
 
             if (string.IsNullOrEmpty(boleto.Carteira))
-                throw new BoletoNetException("Tipo de carteira È obrigatÛrio. " + ObterInformacoesCarteirasDisponiveis());
+                throw new BoletoNetException("Tipo de carteira √© obrigat√≥rio. " + ObterInformacoesCarteirasDisponiveis());
 
             if (!CarteiraValida(boleto.Carteira))
-                throw new BoletoNetException("Carteira informada È inv·lida. Informe " + ObterInformacoesCarteirasDisponiveis());
+                throw new BoletoNetException("Carteira informada √© inv√°lida. Informe " + ObterInformacoesCarteirasDisponiveis());
 
-            //Verifica se o nosso n˙mero È v·lido
+            //Verifica se o nosso n√∫mero √© v√°lido
             var Length_NN = boleto.NossoNumero.Length;
             switch (Length_NN)
             {
@@ -92,12 +92,12 @@ namespace BoletoNet
                     boleto.NossoNumero += boleto.DigitoNossoNumero;
                     break;
                 default:
-                    throw new NotImplementedException("Nosso n˙mero inv·lido");
+                    throw new NotImplementedException("Nosso n√∫mero inv√°lido");
             }
 
             FormataCodigoBarra(boleto);
             if (boleto.CodigoBarra.Codigo.Length != 44)
-                throw new BoletoNetException("CÛdigo de barras È inv·lido");
+                throw new BoletoNetException("C√≥digo de barras √© inv√°lido");
 
             FormataLinhaDigitavel(boleto);
             FormataNossoNumero(boleto);
@@ -105,7 +105,7 @@ namespace BoletoNet
 
         private string ObterInformacoesCarteirasDisponiveis()
         {
-            return string.Join(", ", carteirasDisponiveis.Select(o => string.Format("ì{0}î ñ {1}", o.Key, o.Value)));
+            return string.Join(", ", carteirasDisponiveis.Select(o => string.Format("‚Äú{0}‚Äù ‚Äì {1}", o.Key, o.Value)));
         }
 
         private bool CarteiraValida(string carteira)
@@ -124,7 +124,7 @@ namespace BoletoNet
 
             if (nossoNumero == null || nossoNumero.Length != 9)
             {
-                throw new Exception("Erro ao tentar formatar nosso n˙mero, verifique o tamanho do campo");
+                throw new Exception("Erro ao tentar formatar nosso n√∫mero, verifique o tamanho do campo");
             }
 
             try
@@ -133,13 +133,13 @@ namespace BoletoNet
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao formatar nosso n˙mero", ex);
+                throw new Exception("Erro ao formatar nosso n√∫mero", ex);
             }
         }
 
         public override void FormataNumeroDocumento(Boleto boleto)
         {
-            throw new NotImplementedException("FunÁ„o do fomata n˙mero do documento n„o implementada.");
+            throw new NotImplementedException("Fun√ß√£o do fomata n√∫mero do documento n√£o implementada.");
         }
         public override void FormataLinhaDigitavel(Boleto boleto)
         {
@@ -173,7 +173,7 @@ namespace BoletoNet
             string valorBoleto = boleto.ValorBoleto.ToString("f").Replace(",", "").Replace(".", "");
             valorBoleto = Utils.FormatCode(valorBoleto, 10);
 
-            var codigoCobranca = 1; //CÛdigo de cobranÁa com registro
+            var codigoCobranca = 1; //C√≥digo de cobran√ßa com registro
             string cmp_livre =
                 codigoCobranca +
                 boleto.Carteira +
@@ -225,7 +225,7 @@ namespace BoletoNet
         //    return valida;
         //}
 
-        #region MÈtodos de GeraÁ„o do Arquivo de Remessa
+        #region M√©todos de Gera√ß√£o do Arquivo de Remessa
         public override string GerarDetalheRemessa(Boleto boleto, int numeroRegistro, TipoArquivo tipoArquivo)
         {
             try
@@ -251,12 +251,12 @@ namespace BoletoNet
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro durante a geraÁ„o do DETALHE arquivo de REMESSA.", ex);
+                throw new Exception("Erro durante a gera√ß√£o do DETALHE arquivo de REMESSA.", ex);
             }
         }
         public override string GerarHeaderRemessa(string numeroConvenio, Cedente cedente, TipoArquivo tipoArquivo, int numeroArquivoRemessa, Boleto boletos)
         {
-            throw new NotImplementedException("FunÁ„o n„o implementada.");
+            throw new NotImplementedException("Fun√ß√£o n√£o implementada.");
         }
         public string GerarDetalheRemessaCNAB240(Boleto boleto, int numeroRegistro, TipoArquivo tipoArquivo)
         {
@@ -336,7 +336,7 @@ namespace BoletoNet
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro durante a geraÁ„o do HEADER do arquivo de REMESSA.", ex);
+                throw new Exception("Erro durante a gera√ß√£o do HEADER do arquivo de REMESSA.", ex);
             }
         }
 
@@ -365,7 +365,7 @@ namespace BoletoNet
                         header = GerarHeaderLoteRemessaCNAB240(cedente, numeroArquivoRemessa);
                         break;
                     case TipoArquivo.CNAB400:
-                        // n„o tem no CNAB 400 header = GerarHeaderLoteRemessaCNAB400(0, cedente, numeroArquivoRemessa);
+                        // n√£o tem no CNAB 400 header = GerarHeaderLoteRemessaCNAB400(0, cedente, numeroArquivoRemessa);
                         break;
                     case TipoArquivo.Outro:
                         throw new Exception("Tipo de arquivo inexistente.");
@@ -376,7 +376,7 @@ namespace BoletoNet
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro durante a geraÁ„o do HEADER DO LOTE do arquivo de REMESSA.", ex);
+                throw new Exception("Erro durante a gera√ß√£o do HEADER DO LOTE do arquivo de REMESSA.", ex);
             }
         }
 
@@ -463,15 +463,15 @@ namespace BoletoNet
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro durante a geraÁ„o do registro TRAILER do arquivo de REMESSA.", ex);
+                throw new Exception("Erro durante a gera√ß√£o do registro TRAILER do arquivo de REMESSA.", ex);
             }
         }
 
         #endregion
 
-        #region MÈtodos de Leitura do Arquivo de Retorno
+        #region M√©todos de Leitura do Arquivo de Retorno
         /*
-         * SubstituÌdo MÈtodo de Leitura do Retorno pelo Interpretador de EDI;
+         * Substitu√≠do M√©todo de Leitura do Retorno pelo Interpretador de EDI;
         public override DetalheRetorno LerDetalheRetornoCNAB400(string registro)
         {
             try
@@ -486,7 +486,7 @@ namespace BoletoNet
                 int codigoOcorrencia = Utils.ToInt32(registro.Substring(108, 2));
                 detalhe.CodigoOcorrencia = codigoOcorrencia;
 
-                //Data OcorrÍncia no Banco
+                //Data Ocorr√™ncia no Banco
                 int dataOcorrencia = Utils.ToInt32(registro.Substring(110, 6));
                 detalhe.DataOcorrencia = Utils.ToDateTime(dataOcorrencia.ToString("##-##-##"));
 
@@ -532,13 +532,13 @@ namespace BoletoNet
             }
         }
         */
-        #endregion MÈtodos de Leitura do Arquivo de Retorno
+        #endregion M√©todos de Leitura do Arquivo de Retorno
 
         public int Mod10Sicredi(string seq)
         {
-            /* Vari·veis
+            /* Vari√°veis
              * -------------
-             * d - DÌgito
+             * d - D√≠gito
              * s - Soma
              * p - Peso
              * b - Base
@@ -574,9 +574,9 @@ namespace BoletoNet
 
         public int digSicredi(string seq)
         {
-            /* Vari·veis
+            /* Vari√°veis
              * -------------
-             * d - DÌgito
+             * d - D√≠gito
              * s - Soma
              * p - Peso
              * b - Base
@@ -602,13 +602,13 @@ namespace BoletoNet
 
         public string DigNossoNumeroSicredi(Boleto boleto)
         {
-            string codigoCedente = boleto.Cedente.Codigo;           //cÛdigo do benefici·rio aaaappccccc
-            string nossoNumero = boleto.NossoNumero;                //ano atual (yy), indicador de geraÁ„o do nosso n˙mero (b) e o n˙mero seq¸encial do benefici·rio (nnnnn);
+            string codigoCedente = boleto.Cedente.Codigo;           //c√≥digo do benefici√°rio aaaappccccc
+            string nossoNumero = boleto.NossoNumero;                //ano atual (yy), indicador de gera√ß√£o do nosso n√∫mero (b) e o n√∫mero seq√ºencial do benefici√°rio (nnnnn);
 
             string seq = string.Concat(codigoCedente, nossoNumero); // = aaaappcccccyybnnnnn
-            /* Vari·veis
+            /* Vari√°veis
              * -------------
-             * d - DÌgito
+             * d - D√≠gito
              * s - Soma
              * p - Peso
              * b - Base
@@ -625,7 +625,7 @@ namespace BoletoNet
                 else
                     p = 2;
             }
-            d = 11 - (s % 11);//Calcula o MÛdulo 11;
+            d = 11 - (s % 11);//Calcula o M√≥dulo 11;
             if (d > 9)
                 d = 0;
             return d.ToString();
@@ -633,7 +633,7 @@ namespace BoletoNet
 
 
         /// <summary>
-        /// Efetua as ValidaÁıes dentro da classe Boleto, para garantir a geraÁ„o da remessa
+        /// Efetua as Valida√ß√µes dentro da classe Boleto, para garantir a gera√ß√£o da remessa
         /// </summary>
         public override bool ValidarRemessa(TipoArquivo tipoArquivo, string numeroConvenio, IBanco banco, Cedente cedente, Boletos boletos, int numeroArquivoRemessa, out string mensagem)
         {
@@ -663,27 +663,27 @@ namespace BoletoNet
             bool vRetorno = true;
             string vMsg = string.Empty;
             //
-            #region PrÈ ValidaÁıes
+            #region Pr√© Valida√ß√µes
             if (banco == null)
             {
-                vMsg += String.Concat("Remessa: O Banco È ObrigatÛrio!", Environment.NewLine);
+                vMsg += String.Concat("Remessa: O Banco √© Obrigat√≥rio!", Environment.NewLine);
                 vRetorno = false;
             }
             if (cedente == null)
             {
-                vMsg += String.Concat("Remessa: O Cedente/Benefici·rio È ObrigatÛrio!", Environment.NewLine);
+                vMsg += String.Concat("Remessa: O Cedente/Benefici√°rio √© Obrigat√≥rio!", Environment.NewLine);
                 vRetorno = false;
             }
             if (boletos == null || boletos.Count.Equals(0))
             {
-                vMsg += String.Concat("Remessa: Dever· existir ao menos 1 boleto para geraÁ„o da remessa!", Environment.NewLine);
+                vMsg += String.Concat("Remessa: Dever√° existir ao menos 1 boleto para gera√ß√£o da remessa!", Environment.NewLine);
                 vRetorno = false;
             }
             #endregion
             //
             foreach (Boleto boleto in boletos)
             {
-                #region ValidaÁ„o de cada boleto
+                #region Valida√ß√£o de cada boleto
                 if (boleto.Remessa == null)
                 {
                     vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe as diretrizes de remessa!", Environment.NewLine);
@@ -691,55 +691,55 @@ namespace BoletoNet
                 }
                 else
                 {
-                    #region ValidaÁıes da Remessa que dever„o estar preenchidas quando SICREDI
-                    //Comentado porque ainda est· fixado em 01
+                    #region Valida√ß√µes da Remessa que dever√£o estar preenchidas quando SICREDI
+                    //Comentado porque ainda est√° fixado em 01
                     //if (String.IsNullOrEmpty(boleto.Remessa.CodigoOcorrencia))
                     //{
-                    //    vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe o CÛdigo de OcorrÍncia!", Environment.NewLine);
+                    //    vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe o C√≥digo de Ocorr√™ncia!", Environment.NewLine);
                     //    vRetorno = false;
                     //}
                     if (String.IsNullOrEmpty(boleto.NumeroDocumento))
                     {
-                        vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe um N˙mero de Documento!", Environment.NewLine);
+                        vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe um N√∫mero de Documento!", Environment.NewLine);
                         vRetorno = false;
                     }
                     else if (String.IsNullOrEmpty(boleto.Remessa.TipoDocumento))
                     {
                         // Para o Sicredi, defini o Tipo de Documento sendo: 
                         //       A = 'A' - SICREDI com Registro
-                        //      C1 = 'C' - SICREDI sem Registro Impress„o Completa pelo Sicredi
-                        //      C2 = 'C' - SICREDI sem Registro Pedido de bloquetos prÈ-impressos
-                        // ** Isso porque s„o tratados 3 leiautes de escrita diferentes para o Detail da remessa;
+                        //      C1 = 'C' - SICREDI sem Registro Impress√£o Completa pelo Sicredi
+                        //      C2 = 'C' - SICREDI sem Registro Pedido de bloquetos pr√©-impressos
+                        // ** Isso porque s√£o tratados 3 leiautes de escrita diferentes para o Detail da remessa;
 
                         vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe o Tipo Documento!", Environment.NewLine);
                         vRetorno = false;
                     }
                     else if (!boleto.Remessa.TipoDocumento.Equals("A") && !boleto.Remessa.TipoDocumento.Equals("C1") && !boleto.Remessa.TipoDocumento.Equals("C2"))
                     {
-                        vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Tipo de Documento Inv·lido! Dever„o ser: A = SICREDI com Registro; C1 = SICREDI sem Registro Impress„o Completa pelo Sicredi;  C2 = SICREDI sem Registro Pedido de bloquetos prÈ-impressos", Environment.NewLine);
+                        vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Tipo de Documento Inv√°lido! Dever√£o ser: A = SICREDI com Registro; C1 = SICREDI sem Registro Impress√£o Completa pelo Sicredi;  C2 = SICREDI sem Registro Pedido de bloquetos pr√©-impressos", Environment.NewLine);
                         vRetorno = false;
                     }
                     //else if (boleto.Remessa.TipoDocumento.Equals("06") && !String.IsNullOrEmpty(boleto.NossoNumero))
                     //{
-                    //    //Para o "Remessa.TipoDocumento = "06", n„o poder· ter NossoNumero Gerado!
-                    //    vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; N„o pode existir NossoNumero para o Tipo Documento '06 - cobranÁa escritural'!", Environment.NewLine);
+                    //    //Para o "Remessa.TipoDocumento = "06", n√£o poder√° ter NossoNumero Gerado!
+                    //    vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; N√£o pode existir NossoNumero para o Tipo Documento '06 - cobran√ßa escritural'!", Environment.NewLine);
                     //    vRetorno = false;
                     //}
-                    else if (!boleto.EspecieDocumento.Codigo.Equals("A") && //A - Duplicata Mercantil por IndicaÁ„o
+                    else if (!boleto.EspecieDocumento.Codigo.Equals("A") && //A - Duplicata Mercantil por Indica√ß√£o
                              !boleto.EspecieDocumento.Codigo.Equals("B") && //B - Duplicata Rural;
-                             !boleto.EspecieDocumento.Codigo.Equals("C") && //C - Nota PromissÛria;
-                             !boleto.EspecieDocumento.Codigo.Equals("D") && //D - Nota PromissÛria Rural;
+                             !boleto.EspecieDocumento.Codigo.Equals("C") && //C - Nota Promiss√≥ria;
+                             !boleto.EspecieDocumento.Codigo.Equals("D") && //D - Nota Promiss√≥ria Rural;
                              !boleto.EspecieDocumento.Codigo.Equals("E") && //E - Nota de Seguros;
-                             !boleto.EspecieDocumento.Codigo.Equals("F") && //G ñ Recibo;
+                             !boleto.EspecieDocumento.Codigo.Equals("F") && //G ‚Äì Recibo;
 
-                             !boleto.EspecieDocumento.Codigo.Equals("H") && //H - Letra de C‚mbio;
-                             !boleto.EspecieDocumento.Codigo.Equals("I") && //I - Nota de DÈbito;
-                             !boleto.EspecieDocumento.Codigo.Equals("J") && //J - Duplicata de ServiÁo por IndicaÁ„o;
-                             !boleto.EspecieDocumento.Codigo.Equals("O") && //O ñ Boleto Proposta
-                             !boleto.EspecieDocumento.Codigo.Equals("K") //K ñ Outros.
+                             !boleto.EspecieDocumento.Codigo.Equals("H") && //H - Letra de C√¢mbio;
+                             !boleto.EspecieDocumento.Codigo.Equals("I") && //I - Nota de D√©bito;
+                             !boleto.EspecieDocumento.Codigo.Equals("J") && //J - Duplicata de Servi√ßo por Indica√ß√£o;
+                             !boleto.EspecieDocumento.Codigo.Equals("O") && //O ‚Äì Boleto Proposta
+                             !boleto.EspecieDocumento.Codigo.Equals("K") //K ‚Äì Outros.
                             )
                     {
-                        vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe o CÛdigo da EspÈcieDocumento! S„o Aceitas:{A,B,C,D,E,F,H,I,J,O,K}", Environment.NewLine);
+                        vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe o C√≥digo da Esp√©cieDocumento! S√£o Aceitas:{A,B,C,D,E,F,H,I,J,O,K}", Environment.NewLine);
                         vRetorno = false;
                     }
                     else if (!boleto.Sacado.CPFCNPJ.Length.Equals(11) && !boleto.Sacado.CPFCNPJ.Length.Equals(14))
@@ -749,13 +749,13 @@ namespace BoletoNet
                     }
                     else if (!boleto.NossoNumero.Length.Equals(8))
                     {
-                        //sidnei.klein: Segundo definiÁ„o recebida pelo Sicredi-RS, o Nosso N˙mero sempre ter· somente 8 caracteres sem o DV que est· no boleto.DigitoNossoNumero
-                        vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: O Nosso N˙mero diferente de 8 caracteres!", Environment.NewLine);
+                        //sidnei.klein: Segundo defini√ß√£o recebida pelo Sicredi-RS, o Nosso N√∫mero sempre ter√° somente 8 caracteres sem o DV que est√° no boleto.DigitoNossoNumero
+                        vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: O Nosso N√∫mero diferente de 8 caracteres!", Environment.NewLine);
                         vRetorno = false;
                     }
                     else if (!boleto.TipoImpressao.Equals("A") && !boleto.TipoImpressao.Equals("B"))
                     {
-                        vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Tipo de Impress„o deve conter A - Normal ou B - CarnÍ", Environment.NewLine);
+                        vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Tipo de Impress√£o deve conter A - Normal ou B - Carn√™", Environment.NewLine);
                         vRetorno = false;
                     }
                     #endregion
@@ -814,11 +814,11 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0001, 001, 0, "1", ' '));                                       //001-001
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0002, 001, 0, "A", ' '));                                       //002-002  'A' - SICREDI com Registro
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0003, 001, 0, "A", ' '));                                       //003-003  'A' - Simples
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0004, 001, 0, boleto.TipoImpressao, ' '));                                       //004-004  'A' ñ Normal
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0004, 001, 0, boleto.TipoImpressao, ' '));                                       //004-004  'A' ‚Äì Normal
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0005, 012, 0, string.Empty, ' '));                              //005-016
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0017, 001, 0, "A", ' '));                                       //017-017  Tipo de moeda: 'A' - REAL
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0018, 001, 0, "A", ' '));                                       //018-018  Tipo de desconto: 'A' - VALOR
-                #region CÛdigo de Juros
+                #region C√≥digo de Juros
                 string CodJuros = "A";
                 decimal ValorOuPercJuros = 0;
                 if (boleto.JurosMora > 0)
@@ -834,7 +834,7 @@ namespace BoletoNet
                 #endregion
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0019, 001, 0, CodJuros, ' '));                                  //019-019  Tipo de juros: 'A' - VALOR / 'B' PERCENTUAL
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0020, 028, 0, string.Empty, ' '));                              //020-047
-                #region Nosso N˙mero + DV
+                #region Nosso N√∫mero + DV
                 string NossoNumero = boleto.NossoNumero.Replace("/", "").Replace("-", ""); // AA/BXXXXX-D
                 string vAuxNossoNumeroComDV = NossoNumero;
                 if (string.IsNullOrEmpty(boleto.DigitoNossoNumero) || NossoNumero.Length < 9)
@@ -847,9 +847,9 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0057, 006, 0, string.Empty, ' '));                              //057-062
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediDataAAAAMMDD_________, 0063, 008, 0, boleto.DataProcessamento, ' '));                  //063-070
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0071, 001, 0, string.Empty, ' '));                              //071-071
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0072, 001, 0, "N", ' '));                                       //072-072 'N' - N„o Postar e remeter para o benefici·rio
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0072, 001, 0, "N", ' '));                                       //072-072 'N' - N√£o Postar e remeter para o benefici√°rio
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0073, 001, 0, string.Empty, ' '));                              //073-073
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0074, 001, 0, "B", ' '));                                       //074-074 'B' ñ Impress„o È feita pelo Benefici·rio
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0074, 001, 0, "B", ' '));                                       //074-074 'B' ‚Äì Impress√£o √© feita pelo Benefici√°rio
                 if (boleto.TipoImpressao.Equals("A"))
                 {
                     reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0075, 002, 0, 0, '0'));                                      //075-076
@@ -864,21 +864,21 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0083, 010, 2, boleto.ValorDescontoAntecipacao, '0'));           //083-092
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0093, 004, 2, boleto.PercMulta, '0'));                          //093-096
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0097, 012, 0, string.Empty, ' '));                              //097-108
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0109, 002, 0, ObterCodigoDaOcorrencia(boleto), ' '));           //109-110 01 - Cadastro de tÌtulo;
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0109, 002, 0, ObterCodigoDaOcorrencia(boleto), ' '));           //109-110 01 - Cadastro de t√≠tulo;
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0111, 010, 0, boleto.NumeroDocumento, ' '));                    //111-120
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediDataDDMMAA___________, 0121, 006, 0, boleto.DataVencimento, ' '));                     //121-126
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0127, 013, 2, boleto.ValorBoleto, '0'));                        //127-139
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0140, 009, 0, string.Empty, ' '));                              //140-148
-                #region EspÈcie de documento
-                //Adota Duplicata Mercantil p/ IndicaÁ„o como padr„o.
+                #region Esp√©cie de documento
+                //Adota Duplicata Mercantil p/ Indica√ß√£o como padr√£o.
                 var especieDoc = boleto.EspecieDocumento ?? new EspecieDocumento_Sicredi("A");
                 #endregion
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0149, 001, 0, especieDoc.Codigo, ' '));                         //149-149
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0150, 001, 0, boleto.Aceite, ' '));                             //150-150
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediDataDDMMAA___________, 0151, 006, 0, boleto.DataProcessamento, ' '));                  //151-156
-                #region InstruÁıes
-                string vInstrucao1 = "00"; //1™ instruÁ„o (2, N) Caso Queira colocar um cod de uma instruÁ„o. ver no Manual caso nao coloca 00
-                string vInstrucao2 = "00"; //2™ instruÁ„o (2, N) Caso Queira colocar um cod de uma instruÁ„o. ver no Manual caso nao coloca 00
+                #region Instru√ß√µes
+                string vInstrucao1 = "00"; //1¬™ instru√ß√£o (2, N) Caso Queira colocar um cod de uma instru√ß√£o. ver no Manual caso nao coloca 00
+                string vInstrucao2 = "00"; //2¬™ instru√ß√£o (2, N) Caso Queira colocar um cod de uma instru√ß√£o. ver no Manual caso nao coloca 00
                 foreach (IInstrucao instrucao in boleto.Instrucoes)
                 {
                     switch ((EnumInstrucoes_Sicredi)instrucao.Codigo)
@@ -888,7 +888,7 @@ namespace BoletoNet
                             vInstrucao2 = "00";
                             break;
                         case EnumInstrucoes_Sicredi.PedidoProtesto:
-                            vInstrucao1 = "06"; //Indicar o cÛdigo ì06î - (Protesto)
+                            vInstrucao1 = "06"; //Indicar o c√≥digo ‚Äú06‚Äù - (Protesto)
                             vInstrucao2 = Utils.FitStringLength(instrucao.QuantidadeDias.ToString(), 2, 2, '0', 0, true, true, true);
                             break;
                     }
@@ -906,10 +906,10 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0180, 013, 2, boleto.ValorDesconto, '0'));                      //180-192
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0193, 013, 0, 0, '0'));                                         //193-205
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0206, 013, 2, boleto.Abatimento, '0'));                         //206-218
-                #region Regra Tipo de InscriÁ„o Sacado
+                #region Regra Tipo de Inscri√ß√£o Sacado
                 string vCpfCnpjSac = "0";
-                if (boleto.Sacado.CPFCNPJ.Length.Equals(11)) vCpfCnpjSac = "1"; //Cpf È sempre 11;
-                else if (boleto.Sacado.CPFCNPJ.Length.Equals(14)) vCpfCnpjSac = "2"; //Cnpj È sempre 14;
+                if (boleto.Sacado.CPFCNPJ.Length.Equals(11)) vCpfCnpjSac = "1"; //Cpf √© sempre 11;
+                else if (boleto.Sacado.CPFCNPJ.Length.Equals(14)) vCpfCnpjSac = "2"; //Cnpj √© sempre 14;
                 #endregion
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0219, 001, 0, vCpfCnpjSac, '0'));                               //219-219
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0220, 001, 0, "0", '0'));                                       //220-220
@@ -958,7 +958,7 @@ namespace BoletoNet
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro durante a geraÁ„o do registro TRAILER do arquivo de REMESSA.", ex);
+                throw new Exception("Erro durante a gera√ß√£o do registro TRAILER do arquivo de REMESSA.", ex);
             }
         }
 
@@ -971,157 +971,157 @@ namespace BoletoNet
                 #region LISTA DE MOTIVOS
                 List<String> ocorrencias = new List<string>();
 
-                ocorrencias.Add("01-CÛdigo do banco inv·lido");
-                ocorrencias.Add("02-CÛdigo do registro detalhe inv·lido");
-                ocorrencias.Add("03-CÛdigo da ocorrÍncia inv·lido");
-                ocorrencias.Add("04-CÛdigo de ocorrÍncia n„o permitida para a carteira");
-                ocorrencias.Add("05-CÛdigo de ocorrÍncia n„o numÈrico");
-                ocorrencias.Add("07-Cooperativa/agÍncia/conta/dÌgito inv·lidos");
-                ocorrencias.Add("08-Nosso n˙mero inv·lido");
-                ocorrencias.Add("09-Nosso n˙mero duplicado");
-                ocorrencias.Add("10-Carteira inv·lida");
-                ocorrencias.Add("14-TÌtulo protestado");
-                ocorrencias.Add("15-Cooperativa/carteira/agÍncia/conta/nosso n˙mero inv·lidos");
-                ocorrencias.Add("16-Data de vencimento inv·lida");
-                ocorrencias.Add("17-Data de vencimento anterior ‡ data de emiss„o");
-                ocorrencias.Add("18-Vencimento fora do prazo de operaÁ„o");
-                ocorrencias.Add("20-Valor do tÌtulo inv·lido");
-                ocorrencias.Add("21-EspÈcie do tÌtulo inv·lida");
-                ocorrencias.Add("22-EspÈcie n„o permitida para a carteira");
-                ocorrencias.Add("24-Data de emiss„o inv·lida");
-                ocorrencias.Add("29-Valor do desconto maior/igual ao valor do tÌtulo");
-                ocorrencias.Add("31-Concess„o de desconto - existe desconto anterior");
-                ocorrencias.Add("33-Valor do abatimento inv·lido");
-                ocorrencias.Add("34-Valor do abatimento maior/igual ao valor do tÌtulo");
-                ocorrencias.Add("36-Concess„o de abatimento - existe abatimento anterior");
-                ocorrencias.Add("38-Prazo para protesto inv·lido");
-                ocorrencias.Add("39-Pedido para protesto n„o permitido para o tÌtulo");
-                ocorrencias.Add("40-TÌtulo com ordem de protesto emitida");
-                ocorrencias.Add("41-Pedido cancelamento/sustaÁ„o sem instruÁ„o de protesto");
-                ocorrencias.Add("44-Cooperativa de crÈdito/agÍncia benefici·ria n„o prevista");
-                ocorrencias.Add("45-Nome do pagador inv·lido");
-                ocorrencias.Add("46-Tipo/n˙mero de inscriÁ„o do pagador inv·lidos");
-                ocorrencias.Add("47-EndereÁo do pagador n„o informado");
+                ocorrencias.Add("01-C√≥digo do banco inv√°lido");
+                ocorrencias.Add("02-C√≥digo do registro detalhe inv√°lido");
+                ocorrencias.Add("03-C√≥digo da ocorr√™ncia inv√°lido");
+                ocorrencias.Add("04-C√≥digo de ocorr√™ncia n√£o permitida para a carteira");
+                ocorrencias.Add("05-C√≥digo de ocorr√™ncia n√£o num√©rico");
+                ocorrencias.Add("07-Cooperativa/ag√™ncia/conta/d√≠gito inv√°lidos");
+                ocorrencias.Add("08-Nosso n√∫mero inv√°lido");
+                ocorrencias.Add("09-Nosso n√∫mero duplicado");
+                ocorrencias.Add("10-Carteira inv√°lida");
+                ocorrencias.Add("14-T√≠tulo protestado");
+                ocorrencias.Add("15-Cooperativa/carteira/ag√™ncia/conta/nosso n√∫mero inv√°lidos");
+                ocorrencias.Add("16-Data de vencimento inv√°lida");
+                ocorrencias.Add("17-Data de vencimento anterior √† data de emiss√£o");
+                ocorrencias.Add("18-Vencimento fora do prazo de opera√ß√£o");
+                ocorrencias.Add("20-Valor do t√≠tulo inv√°lido");
+                ocorrencias.Add("21-Esp√©cie do t√≠tulo inv√°lida");
+                ocorrencias.Add("22-Esp√©cie n√£o permitida para a carteira");
+                ocorrencias.Add("24-Data de emiss√£o inv√°lida");
+                ocorrencias.Add("29-Valor do desconto maior/igual ao valor do t√≠tulo");
+                ocorrencias.Add("31-Concess√£o de desconto - existe desconto anterior");
+                ocorrencias.Add("33-Valor do abatimento inv√°lido");
+                ocorrencias.Add("34-Valor do abatimento maior/igual ao valor do t√≠tulo");
+                ocorrencias.Add("36-Concess√£o de abatimento - existe abatimento anterior");
+                ocorrencias.Add("38-Prazo para protesto inv√°lido");
+                ocorrencias.Add("39-Pedido para protesto n√£o permitido para o t√≠tulo");
+                ocorrencias.Add("40-T√≠tulo com ordem de protesto emitida");
+                ocorrencias.Add("41-Pedido cancelamento/susta√ß√£o sem instru√ß√£o de protesto");
+                ocorrencias.Add("44-Cooperativa de cr√©dito/ag√™ncia benefici√°ria n√£o prevista");
+                ocorrencias.Add("45-Nome do pagador inv√°lido");
+                ocorrencias.Add("46-Tipo/n√∫mero de inscri√ß√£o do pagador inv√°lidos");
+                ocorrencias.Add("47-Endere√ßo do pagador n√£o informado");
                 ocorrencias.Add("48-CEP irregular");
-                ocorrencias.Add("49-N˙mero de InscriÁ„o do pagador/avalista inv·lido");
-                ocorrencias.Add("50-Pagador/avalista n„o informado");
-                ocorrencias.Add("60-Movimento para tÌtulo n„o cadastrado");
-                ocorrencias.Add("63-Entrada para tÌtulo j· cadastrado");
+                ocorrencias.Add("49-N√∫mero de Inscri√ß√£o do pagador/avalista inv√°lido");
+                ocorrencias.Add("50-Pagador/avalista n√£o informado");
+                ocorrencias.Add("60-Movimento para t√≠tulo n√£o cadastrado");
+                ocorrencias.Add("63-Entrada para t√≠tulo j√° cadastrado");
                 ocorrencias.Add("A -Aceito");
-                ocorrencias.Add("A1-PraÁa do pagador n„o cadastrada.");
-                ocorrencias.Add("A2-Tipo de cobranÁa do tÌtulo divergente com a praÁa do pagador.");
-                ocorrencias.Add("A3-Cooperativa/agÍncia deposit·ria divergente: atualiza o cadastro de praÁas da Coop./agÍncia benefici·ria");
-                ocorrencias.Add("A4-Benefici·rio n„o cadastrado ou possui CGC/CIC inv·lido");
-                ocorrencias.Add("A5-Pagador n„o cadastrado");
-                ocorrencias.Add("A6-Data da instruÁ„o/ocorrÍncia inv·lida");
-                ocorrencias.Add("A7-OcorrÍncia n„o pode ser comandada");
-                ocorrencias.Add("A8-Recebimento da liquidaÁ„o fora da rede Sicredi - via compensaÁ„o eletrÙnica");
-                ocorrencias.Add("B4-Tipo de moeda inv·lido");
-                ocorrencias.Add("B5-Tipo de desconto/juros inv·lido");
-                ocorrencias.Add("B6-Mensagem padr„o n„o cadastrada");
-                ocorrencias.Add("B7-Seu n˙mero inv·lido");
-                ocorrencias.Add("B8-Percentual de multa inv·lido");
-                ocorrencias.Add("B9-Valor ou percentual de juros inv·lido");
-                ocorrencias.Add("C1-Data limite para concess„o de desconto inv·lida");
-                ocorrencias.Add("C2-Aceite do tÌtulo inv·lido");
-                ocorrencias.Add("C3-Campo alterado na instruÁ„o ì31 ñ alteraÁ„o de outros dadosî inv·lido");
-                ocorrencias.Add("C4-TÌtulo ainda n„o foi confirmado pela centralizadora");
-                ocorrencias.Add("C5-TÌtulo rejeitado pela centralizadora");
-                ocorrencias.Add("C6-TÌtulo j· liquidado");
-                ocorrencias.Add("C7-TÌtulo j· baixado");
-                ocorrencias.Add("C8-Existe mesma instruÁ„o pendente de confirmaÁ„o para este tÌtulo");
-                ocorrencias.Add("C9-InstruÁ„o prÈvia de concess„o de abatimento n„o existe ou n„o confirmada");
+                ocorrencias.Add("A1-Pra√ßa do pagador n√£o cadastrada.");
+                ocorrencias.Add("A2-Tipo de cobran√ßa do t√≠tulo divergente com a pra√ßa do pagador.");
+                ocorrencias.Add("A3-Cooperativa/ag√™ncia deposit√°ria divergente: atualiza o cadastro de pra√ßas da Coop./ag√™ncia benefici√°ria");
+                ocorrencias.Add("A4-Benefici√°rio n√£o cadastrado ou possui CGC/CIC inv√°lido");
+                ocorrencias.Add("A5-Pagador n√£o cadastrado");
+                ocorrencias.Add("A6-Data da instru√ß√£o/ocorr√™ncia inv√°lida");
+                ocorrencias.Add("A7-Ocorr√™ncia n√£o pode ser comandada");
+                ocorrencias.Add("A8-Recebimento da liquida√ß√£o fora da rede Sicredi - via compensa√ß√£o eletr√¥nica");
+                ocorrencias.Add("B4-Tipo de moeda inv√°lido");
+                ocorrencias.Add("B5-Tipo de desconto/juros inv√°lido");
+                ocorrencias.Add("B6-Mensagem padr√£o n√£o cadastrada");
+                ocorrencias.Add("B7-Seu n√∫mero inv√°lido");
+                ocorrencias.Add("B8-Percentual de multa inv√°lido");
+                ocorrencias.Add("B9-Valor ou percentual de juros inv√°lido");
+                ocorrencias.Add("C1-Data limite para concess√£o de desconto inv√°lida");
+                ocorrencias.Add("C2-Aceite do t√≠tulo inv√°lido");
+                ocorrencias.Add("C3-Campo alterado na instru√ß√£o ‚Äú31 ‚Äì altera√ß√£o de outros dados‚Äù inv√°lido");
+                ocorrencias.Add("C4-T√≠tulo ainda n√£o foi confirmado pela centralizadora");
+                ocorrencias.Add("C5-T√≠tulo rejeitado pela centralizadora");
+                ocorrencias.Add("C6-T√≠tulo j√° liquidado");
+                ocorrencias.Add("C7-T√≠tulo j√° baixado");
+                ocorrencias.Add("C8-Existe mesma instru√ß√£o pendente de confirma√ß√£o para este t√≠tulo");
+                ocorrencias.Add("C9-Instru√ß√£o pr√©via de concess√£o de abatimento n√£o existe ou n√£o confirmada");
                 ocorrencias.Add("D -Desprezado");
-                ocorrencias.Add("D1-TÌtulo dentro do prazo de vencimento (em dia);");
-                ocorrencias.Add("D2-EspÈcie de documento n„o permite protesto de tÌtulo");
-                ocorrencias.Add("D3-TÌtulo possui instruÁ„o de baixa pendente de confirmaÁ„o");
-                ocorrencias.Add("D4-Quantidade de mensagens padr„o excede o limite permitido");
-                ocorrencias.Add("D5-Quantidade inv·lida no pedido de boletos prÈ-impressos da cobranÁa sem registro");
-                ocorrencias.Add("D6-Tipo de impress„o inv·lida para cobranÁa sem registro");
-                ocorrencias.Add("D7-Cidade ou Estado do pagador n„o informado");
-                ocorrencias.Add("D8-Seq¸Íncia para composiÁ„o do nosso n˙mero do ano atual esgotada");
-                ocorrencias.Add("D9-Registro mensagem para tÌtulo n„o cadastrado");
-                ocorrencias.Add("E2-Registro complementar ao cadastro do tÌtulo da cobranÁa com e sem registro n„o cadastrado");
-                ocorrencias.Add("E3-Tipo de postagem inv·lido, diferente de S, N e branco");
-                ocorrencias.Add("E4-Pedido de boletos prÈ-impressos");
-                ocorrencias.Add("E5-ConfirmaÁ„o/rejeiÁ„o para pedidos de boletos n„o cadastrado");
-                ocorrencias.Add("E6-Pagador/avalista n„o cadastrado");
-                ocorrencias.Add("E7-InformaÁ„o para atualizaÁ„o do valor do tÌtulo para protesto inv·lido");
-                ocorrencias.Add("E8-Tipo de impress„o inv·lido, diferente de A, B e branco");
-                ocorrencias.Add("E9-CÛdigo do pagador do tÌtulo divergente com o cÛdigo da cooperativa de crÈdito");
+                ocorrencias.Add("D1-T√≠tulo dentro do prazo de vencimento (em dia);");
+                ocorrencias.Add("D2-Esp√©cie de documento n√£o permite protesto de t√≠tulo");
+                ocorrencias.Add("D3-T√≠tulo possui instru√ß√£o de baixa pendente de confirma√ß√£o");
+                ocorrencias.Add("D4-Quantidade de mensagens padr√£o excede o limite permitido");
+                ocorrencias.Add("D5-Quantidade inv√°lida no pedido de boletos pr√©-impressos da cobran√ßa sem registro");
+                ocorrencias.Add("D6-Tipo de impress√£o inv√°lida para cobran√ßa sem registro");
+                ocorrencias.Add("D7-Cidade ou Estado do pagador n√£o informado");
+                ocorrencias.Add("D8-Seq√º√™ncia para composi√ß√£o do nosso n√∫mero do ano atual esgotada");
+                ocorrencias.Add("D9-Registro mensagem para t√≠tulo n√£o cadastrado");
+                ocorrencias.Add("E2-Registro complementar ao cadastro do t√≠tulo da cobran√ßa com e sem registro n√£o cadastrado");
+                ocorrencias.Add("E3-Tipo de postagem inv√°lido, diferente de S, N e branco");
+                ocorrencias.Add("E4-Pedido de boletos pr√©-impressos");
+                ocorrencias.Add("E5-Confirma√ß√£o/rejei√ß√£o para pedidos de boletos n√£o cadastrado");
+                ocorrencias.Add("E6-Pagador/avalista n√£o cadastrado");
+                ocorrencias.Add("E7-Informa√ß√£o para atualiza√ß√£o do valor do t√≠tulo para protesto inv√°lido");
+                ocorrencias.Add("E8-Tipo de impress√£o inv√°lido, diferente de A, B e branco");
+                ocorrencias.Add("E9-C√≥digo do pagador do t√≠tulo divergente com o c√≥digo da cooperativa de cr√©dito");
                 ocorrencias.Add("F1-Liquidado no sistema do cliente");
                 ocorrencias.Add("F2-Baixado no sistema do cliente");
-                ocorrencias.Add("F3-InstruÁ„o inv·lida, este tÌtulo est· caucionado/descontado");
-                ocorrencias.Add("F4-InstruÁ„o fixa com caracteres inv·lidos");
-                ocorrencias.Add("F6-Nosso n˙mero / n˙mero da parcela fora de seq¸Íncia ñ total de parcelas inv·lido");
-                ocorrencias.Add("F7-Falta de comprovante de prestaÁ„o de serviÁo");
-                ocorrencias.Add("F8-Nome do benefici·rio incompleto / incorreto.");
-                ocorrencias.Add("F9-CNPJ / CPF incompatÌvel com o nome do pagador / Sacador Avalista");
-                ocorrencias.Add("G1-CNPJ / CPF do pagador IncompatÌvel com a espÈcie");
-                ocorrencias.Add("G2-TÌtulo aceito: sem a assinatura do pagador");
-                ocorrencias.Add("G3-TÌtulo aceito: rasurado ou rasgado");
-                ocorrencias.Add("G4-TÌtulo aceito: falta tÌtulo (cooperativa/ag. benefici·ria dever· envi·-lo);");
-                ocorrencias.Add("G5-PraÁa de pagamento incompatÌvel com o endereÁo");
-                ocorrencias.Add("G6-TÌtulo aceito: sem endosso ou benefici·rio irregular");
-                ocorrencias.Add("G7-TÌtulo aceito: valor por extenso diferente do valor numÈrico");
-                ocorrencias.Add("G8-Saldo maior que o valor do tÌtulo");
-                ocorrencias.Add("G9-Tipo de endosso inv·lido");
+                ocorrencias.Add("F3-Instru√ß√£o inv√°lida, este t√≠tulo est√° caucionado/descontado");
+                ocorrencias.Add("F4-Instru√ß√£o fixa com caracteres inv√°lidos");
+                ocorrencias.Add("F6-Nosso n√∫mero / n√∫mero da parcela fora de seq√º√™ncia ‚Äì total de parcelas inv√°lido");
+                ocorrencias.Add("F7-Falta de comprovante de presta√ß√£o de servi√ßo");
+                ocorrencias.Add("F8-Nome do benefici√°rio incompleto / incorreto.");
+                ocorrencias.Add("F9-CNPJ / CPF incompat√≠vel com o nome do pagador / Sacador Avalista");
+                ocorrencias.Add("G1-CNPJ / CPF do pagador Incompat√≠vel com a esp√©cie");
+                ocorrencias.Add("G2-T√≠tulo aceito: sem a assinatura do pagador");
+                ocorrencias.Add("G3-T√≠tulo aceito: rasurado ou rasgado");
+                ocorrencias.Add("G4-T√≠tulo aceito: falta t√≠tulo (cooperativa/ag. benefici√°ria dever√° envi√°-lo);");
+                ocorrencias.Add("G5-Pra√ßa de pagamento incompat√≠vel com o endere√ßo");
+                ocorrencias.Add("G6-T√≠tulo aceito: sem endosso ou benefici√°rio irregular");
+                ocorrencias.Add("G7-T√≠tulo aceito: valor por extenso diferente do valor num√©rico");
+                ocorrencias.Add("G8-Saldo maior que o valor do t√≠tulo");
+                ocorrencias.Add("G9-Tipo de endosso inv√°lido");
                 ocorrencias.Add("H1-Nome do pagador incompleto / Incorreto");
-                ocorrencias.Add("H2-SustaÁ„o judicial");
-                ocorrencias.Add("H3-Pagador n„o encontrado");
-                ocorrencias.Add("H4-AlteraÁ„o de carteira");
-                ocorrencias.Add("H5-Recebimento de liquidaÁ„o fora da rede Sicredi ñ VLB Inferior ñ Via CompensaÁ„o");
-                ocorrencias.Add("H6-Recebimento de liquidaÁ„o fora da rede Sicredi ñ VLB Superior ñ Via CompensaÁ„o");
-                ocorrencias.Add("H7-EspÈcie de documento necessita benefici·rio ou avalista PJ");
-                ocorrencias.Add("H8-Recebimento de liquidaÁ„o fora da rede Sicredi ñ ContingÍncia Via Compe");
-                ocorrencias.Add("H9-Dados do tÌtulo n„o conferem com disquete");
-                ocorrencias.Add("I1-Pagador e Sacador Avalista s„o a mesma pessoa");
-                ocorrencias.Add("I2-Aguardar um dia ˙til apÛs o vencimento para protestar");
+                ocorrencias.Add("H2-Susta√ß√£o judicial");
+                ocorrencias.Add("H3-Pagador n√£o encontrado");
+                ocorrencias.Add("H4-Altera√ß√£o de carteira");
+                ocorrencias.Add("H5-Recebimento de liquida√ß√£o fora da rede Sicredi ‚Äì VLB Inferior ‚Äì Via Compensa√ß√£o");
+                ocorrencias.Add("H6-Recebimento de liquida√ß√£o fora da rede Sicredi ‚Äì VLB Superior ‚Äì Via Compensa√ß√£o");
+                ocorrencias.Add("H7-Esp√©cie de documento necessita benefici√°rio ou avalista PJ");
+                ocorrencias.Add("H8-Recebimento de liquida√ß√£o fora da rede Sicredi ‚Äì Conting√™ncia Via Compe");
+                ocorrencias.Add("H9-Dados do t√≠tulo n√£o conferem com disquete");
+                ocorrencias.Add("I1-Pagador e Sacador Avalista s√£o a mesma pessoa");
+                ocorrencias.Add("I2-Aguardar um dia √∫til ap√≥s o vencimento para protestar");
                 ocorrencias.Add("I3-Data do vencimento rasurada");
-                ocorrencias.Add("I4-Vencimento ñ extenso n„o confere com n˙mero");
-                ocorrencias.Add("I5-Falta data de vencimento no tÌtulo");
-                ocorrencias.Add("I6-DM/DMI sem comprovante autenticado ou declaraÁ„o");
-                ocorrencias.Add("I7-Comprovante ilegÌvel para conferÍncia e microfilmagem");
-                ocorrencias.Add("I8-Nome solicitado n„o confere com emitente ou pagador");
-                ocorrencias.Add("I9-Confirmar se s„o 2 emitentes. Se sim, indicar os dados dos 2");
-                ocorrencias.Add("J1-EndereÁo do pagador igual ao do pagador ou do portador");
-                ocorrencias.Add("J2-EndereÁo do apresentante incompleto ou n„o informado");
-                ocorrencias.Add("J3-Rua/n˙mero inexistente no endereÁo");
+                ocorrencias.Add("I4-Vencimento ‚Äì extenso n√£o confere com n√∫mero");
+                ocorrencias.Add("I5-Falta data de vencimento no t√≠tulo");
+                ocorrencias.Add("I6-DM/DMI sem comprovante autenticado ou declara√ß√£o");
+                ocorrencias.Add("I7-Comprovante ileg√≠vel para confer√™ncia e microfilmagem");
+                ocorrencias.Add("I8-Nome solicitado n√£o confere com emitente ou pagador");
+                ocorrencias.Add("I9-Confirmar se s√£o 2 emitentes. Se sim, indicar os dados dos 2");
+                ocorrencias.Add("J1-Endere√ßo do pagador igual ao do pagador ou do portador");
+                ocorrencias.Add("J2-Endere√ßo do apresentante incompleto ou n√£o informado");
+                ocorrencias.Add("J3-Rua/n√∫mero inexistente no endere√ßo");
                 ocorrencias.Add("J4-Falta endosso do favorecido para o apresentante");
-                ocorrencias.Add("J5-Data da emiss„o rasurada");
-                ocorrencias.Add("J6-Falta assinatura do pagador no tÌtulo");
-                ocorrencias.Add("J7-Nome do apresentante n„o informado/incompleto/incorreto");
+                ocorrencias.Add("J5-Data da emiss√£o rasurada");
+                ocorrencias.Add("J6-Falta assinatura do pagador no t√≠tulo");
+                ocorrencias.Add("J7-Nome do apresentante n√£o informado/incompleto/incorreto");
                 ocorrencias.Add("J8-Erro de preenchimento do titulo");
                 ocorrencias.Add("J9-Titulo com direito de regresso vencido");
                 ocorrencias.Add("K1-Titulo apresentado em duplicidade");
-                ocorrencias.Add("K2-Titulo j· protestado");
-                ocorrencias.Add("K3-Letra de cambio vencida ñ falta aceite do pagador");
-                ocorrencias.Add("K4-Falta declaraÁ„o de saldo assinada no tÌtulo");
-                ocorrencias.Add("K5-Contrato de cambio ñ Falta conta gr·fica");
-                ocorrencias.Add("K6-AusÍncia do documento fÌsico");
+                ocorrencias.Add("K2-Titulo j√° protestado");
+                ocorrencias.Add("K3-Letra de cambio vencida ‚Äì falta aceite do pagador");
+                ocorrencias.Add("K4-Falta declara√ß√£o de saldo assinada no t√≠tulo");
+                ocorrencias.Add("K5-Contrato de cambio ‚Äì Falta conta gr√°fica");
+                ocorrencias.Add("K6-Aus√™ncia do documento f√≠sico");
                 ocorrencias.Add("K7-Pagador falecido");
-                ocorrencias.Add("K8-Pagador apresentou quitaÁ„o do tÌtulo");
-                ocorrencias.Add("K9-TÌtulo de outra jurisdiÁ„o territorial");
-                ocorrencias.Add("L1-TÌtulo com emiss„o anterior a concordata do pagador");
-                ocorrencias.Add("L2-Pagador consta na lista de falÍncia");
-                ocorrencias.Add("L3-Apresentante n„o aceita publicaÁ„o de edital");
-                ocorrencias.Add("L4-Dados do Pagador em Branco ou inv·lido");
-                ocorrencias.Add("L5-CÛdigo do Pagador na agÍncia benefici·ria est· duplicado");
-                ocorrencias.Add("M1-Reconhecimento da dÌvida pelo pagador");
-                ocorrencias.Add("M2-N„o reconhecimento da dÌvida pelo pagador");
-                ocorrencias.Add("M3-Inclus„o de desconto 2 e desconto 3 inv·lida");
+                ocorrencias.Add("K8-Pagador apresentou quita√ß√£o do t√≠tulo");
+                ocorrencias.Add("K9-T√≠tulo de outra jurisdi√ß√£o territorial");
+                ocorrencias.Add("L1-T√≠tulo com emiss√£o anterior a concordata do pagador");
+                ocorrencias.Add("L2-Pagador consta na lista de fal√™ncia");
+                ocorrencias.Add("L3-Apresentante n√£o aceita publica√ß√£o de edital");
+                ocorrencias.Add("L4-Dados do Pagador em Branco ou inv√°lido");
+                ocorrencias.Add("L5-C√≥digo do Pagador na ag√™ncia benefici√°ria est√° duplicado");
+                ocorrencias.Add("M1-Reconhecimento da d√≠vida pelo pagador");
+                ocorrencias.Add("M2-N√£o reconhecimento da d√≠vida pelo pagador");
+                ocorrencias.Add("M3-Inclus√£o de desconto 2 e desconto 3 inv√°lida");
                 ocorrencias.Add("X0-Pago com cheque");
-                ocorrencias.Add("X1-RegularizaÁ„o centralizadora ñ Rede Sicredi");
-                ocorrencias.Add("X2-RegularizaÁ„o centralizadora ñ CompensaÁ„o");
-                ocorrencias.Add("X3-RegularizaÁ„o centralizadora ñ Banco correspondente");
-                ocorrencias.Add("X4-RegularizaÁ„o centralizadora - VLB Inferior - via compensaÁ„o");
-                ocorrencias.Add("X5-RegularizaÁ„o centralizadora - VLB Superior - via compensaÁ„o");
-                ocorrencias.Add("X6-Pago com cheque ñ bloqueado 24 horas");
-                ocorrencias.Add("X7-Pago com cheque ñ bloqueado 48 horas");
-                ocorrencias.Add("X8-Pago com cheque ñ bloqueado 72 horas");
-                ocorrencias.Add("X9-Pago com cheque ñ bloqueado 96 horas");
-                ocorrencias.Add("XA-Pago com cheque ñ bloqueado 120 horas");
-                ocorrencias.Add("XB-Pago com cheque ñ bloqueado 144 horas");
+                ocorrencias.Add("X1-Regulariza√ß√£o centralizadora ‚Äì Rede Sicredi");
+                ocorrencias.Add("X2-Regulariza√ß√£o centralizadora ‚Äì Compensa√ß√£o");
+                ocorrencias.Add("X3-Regulariza√ß√£o centralizadora ‚Äì Banco correspondente");
+                ocorrencias.Add("X4-Regulariza√ß√£o centralizadora - VLB Inferior - via compensa√ß√£o");
+                ocorrencias.Add("X5-Regulariza√ß√£o centralizadora - VLB Superior - via compensa√ß√£o");
+                ocorrencias.Add("X6-Pago com cheque ‚Äì bloqueado 24 horas");
+                ocorrencias.Add("X7-Pago com cheque ‚Äì bloqueado 48 horas");
+                ocorrencias.Add("X8-Pago com cheque ‚Äì bloqueado 72 horas");
+                ocorrencias.Add("X9-Pago com cheque ‚Äì bloqueado 96 horas");
+                ocorrencias.Add("XA-Pago com cheque ‚Äì bloqueado 120 horas");
+                ocorrencias.Add("XB-Pago com cheque ‚Äì bloqueado 144 horas");
                 #endregion
 
                 var ocorrencia = (from s in ocorrencias where s.Substring(0, 2) == codigorejeicao.Substring(0, 2) select s).FirstOrDefault();
@@ -1154,7 +1154,7 @@ namespace BoletoNet
                 //Filler2
                 #region NossoNumeroSicredi
                 detalhe.NossoNumeroComDV = reg.NossoNumeroSicredi;
-                detalhe.NossoNumero = reg.NossoNumeroSicredi.Substring(0, reg.NossoNumeroSicredi.Length - 1); //Nosso N˙mero sem o DV!
+                detalhe.NossoNumero = reg.NossoNumeroSicredi.Substring(0, reg.NossoNumeroSicredi.Length - 1); //Nosso N√∫mero sem o DV!
                 detalhe.DACNossoNumero = reg.NossoNumeroSicredi.Substring(reg.NossoNumeroSicredi.Length - 1); //DV do Nosso Numero
                 #endregion
                 //Filler3
@@ -1162,7 +1162,7 @@ namespace BoletoNet
                 int dataOcorrencia = Utils.ToInt32(reg.DataOcorrencia);
                 detalhe.DataOcorrencia = Utils.ToDateTime(dataOcorrencia.ToString("##-##-##"));
 
-                //DescriÁ„o da ocorrÍncia
+                //Descri√ß√£o da ocorr√™ncia
                 detalhe.DescricaoOcorrencia = new CodigoMovimento(748, detalhe.CodigoOcorrencia).Descricao;
 
                 detalhe.NumeroDocumento = reg.SeuNumero;
@@ -1175,7 +1175,7 @@ namespace BoletoNet
                 decimal valorTitulo = Convert.ToInt64(reg.ValorTitulo);
                 detalhe.ValorTitulo = valorTitulo / 100;
                 //Filler5
-                //Despesas de cobranÁa para os CÛdigos de OcorrÍncia (Valor Despesa)
+                //Despesas de cobran√ßa para os C√≥digos de Ocorr√™ncia (Valor Despesa)
                 if (!String.IsNullOrEmpty(reg.DespesasCobranca))
                 {
                     decimal valorDespesa = Convert.ToUInt64(reg.DespesasCobranca);
@@ -1188,7 +1188,7 @@ namespace BoletoNet
                     detalhe.ValorOutrasDespesas = valorOutrasDespesas / 100;
                 }
                 //Filler6
-                //Abatimento Concedido sobre o TÌtulo (Valor Abatimento Concedido)
+                //Abatimento Concedido sobre o T√≠tulo (Valor Abatimento Concedido)
                 decimal valorAbatimento = Convert.ToUInt64(reg.AbatimentoConcedido);
                 detalhe.ValorAbatimento = valorAbatimento / 100;
                 //Desconto Concedido (Valor Desconto Concedido)
@@ -1210,17 +1210,17 @@ namespace BoletoNet
                 detalhe.NumeroSequencial = Utils.ToInt32(reg.NumeroSequencialRegistro);
                 //
                 #region NAO RETORNADOS PELO SICREDI
-                //detalhe.Especie = reg.TipoDocumento; //Verificar EspÈcie de Documentos...
+                //detalhe.Especie = reg.TipoDocumento; //Verificar Esp√©cie de Documentos...
                 detalhe.OutrosCreditos = 0;
                 detalhe.OrigemPagamento = String.Empty;
                 detalhe.MotivoCodigoOcorrencia = reg.MotivoOcorrencia;
                 //
                 detalhe.IOF = 0;
-                //Motivos das RejeiÁıes para os CÛdigos de OcorrÍncia
+                //Motivos das Rejei√ß√µes para os C√≥digos de Ocorr√™ncia
                 detalhe.MotivosRejeicao = LerMotivoRejeicao(detalhe.MotivoCodigoOcorrencia);
-                //N˙mero do CartÛrio
+                //N√∫mero do Cart√≥rio
                 detalhe.NumeroCartorio = 0;
-                //N˙mero do Protocolo
+                //N√∫mero do Protocolo
                 detalhe.NumeroProtocolo = string.Empty;
 
                 detalhe.CodigoInscricao = 0;
@@ -1233,7 +1233,7 @@ namespace BoletoNet
                 detalhe.IdentificacaoTitulo = string.Empty;
                 //Banco Cobrador
                 detalhe.CodigoBanco = 0;
-                //AgÍncia Cobradora
+                //Ag√™ncia Cobradora
                 detalhe.AgenciaCobradora = 0;
                 #endregion
                 //
@@ -1285,7 +1285,7 @@ namespace BoletoNet
             {
                 return num;
             }
-            throw new BoletoNetException("Nosso n˙mero È inv·lido!");
+            throw new BoletoNetException("Nosso n√∫mero √© inv√°lido!");
         }
     }
 }
